@@ -1,0 +1,142 @@
+<!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
+<idea-plugin>
+    <resource-bundle>sagecodex.sagecodex</resource-bundle>
+
+    <id>com.sage.codex.SageCodeX</id>
+    <name>4Paradigm SageCodeX</name>
+    <version>1.0.0</version>
+
+    <vendor email="sageCodeX@4paradigim.com" url="https://www.4paradigm.com/index.html">第四范式（北京）技术有限公司
+    </vendor>
+
+    <description>
+        4Paradigm SageCodeX (hereinafter referred to as SageCodeX) is an auxiliary tool for improving efficiency and
+        increasing production in software development processes, based on a model that empowers the entire development
+        process and lean development. It targets multiple stages such as code writing and unit testing, helping
+        enterprise development teams improve development efficiency and build standardized "application production
+        pipelines".&#10;
+        SageCodeX has two major functions: general attribute code assistance and business attribute code assistance.
+        SageCodeX can register a private code repository, learn enterprise development standards and programming
+        patterns, and generate business code that is similar to the original style and structure
+    </description>
+
+    <depends>com.intellij.modules.platform</depends>
+
+
+    <extensions defaultExtensionNs="com.intellij">
+
+
+        <!-- 定义插件的tab的窗口，窗口中定义panel -->
+        <toolWindow id="SageCodeX" anchor="right"
+                    icon="com.sage.codex.sagecodex.constant.SageCodeXIcons.SageCodeX"
+                    factoryClass="com.sage.codex.sagecodex.window.SageCodeXToolsWindow"/>
+
+
+        <!-- 定义消息提示框 - BALLOON：自动消失、STICKY_BALLOON：用户点击关闭按钮消失 -->
+        <notificationGroup id="SageNotificationGroup"
+                           displayType="BALLOON"/>
+
+        <applicationConfigurable
+                parentId="tools"
+                instance="com.sage.codex.sagecodex.config.SageCodeXSettingConfiguration"
+                id="sageCodeXSettingConfiguration"
+                displayName="SageCodeXConfiguration"/>
+
+        <applicationService serviceImplementation="com.sage.codex.sagecodex.setting.SageConfigurationSetting">
+        </applicationService>
+        <applicationService serviceImplementation="com.sage.codex.sagecodex.setting.UserInfoConfigurationSetting">
+        </applicationService>
+
+        <applicationService serviceImplementation="com.sage.codex.sagecodex.theme.SageCodeXStatusService"/>
+
+
+        <!-- Declare the application-level service -->
+        <applicationService
+                serviceInterface="com.sage.codex.sagecodex.service.SageCodeXManageService"
+                serviceImplementation="com.sage.codex.sagecodex.service.SageCodeXManageServiceImpl"/>
+
+        <!-- 定义代码方法补全提示，以列表的方式显示的，如: System. -->
+        <!--        <completion.contributor language="JAVA"-->
+        <!--                                implementationClass="com.sage.codex.sagecodex.listener.SageCodeXCompletionContributor"/>-->
+
+
+        <!--        <editorFactoryListener implementation="com.sage.codex.sagecodex.listener.EditorTabListener"/>-->
+
+        <statusBarWidgetFactory order="first"
+                                implementation="com.sage.codex.sagecodex.window.SageCodeXStatusBarWidgetFactory"
+                                id="SageCodeXStatusBar"/>
+
+
+    </extensions>
+
+    <actions>
+        <action id="GenerationCode" class="com.sage.codex.sagecodex.action.GenerationCodeAction"
+                text="SageCodeX:代码生成"
+                description="Generate code based on selected text">
+            <add-to-group group-id="EditorPopupMenu" anchor="first"/>
+        </action>
+        <action id="CommentAddAction" class="com.sage.codex.sagecodex.action.CommentAddAction" text="SageCodex:添加注释"
+                description="Generate comments based on selected code">
+            <add-to-group group-id="EditorPopupMenu" anchor="first"/>
+        </action>
+
+
+        <action id="SageCodeXStatusAction" class="com.sage.codex.sagecodex.action.SageCodeXStatusAction"
+                text="Status: Ready" icon="com.sage.codex.sagecodex.constant.SageCodeXIcons.SageCodeX">
+        </action>
+        <action id="SageCodeXLogoutAction" class="com.sage.codex.sagecodex.action.SageCodeXLogoutAction"
+                text="Logout from SageCodeX" icon="com.sage.codex.sagecodex.constant.SageCodeXIcons.Logout">
+        </action>
+
+        <action id="SageCodeXLoginAction" class="com.sage.codex.sagecodex.action.SageCodeXLoginAction"
+                text="Login from SageCodeX" icon="com.sage.codex.sagecodex.constant.SageCodeXIcons.Login">
+        </action>
+
+
+        <action id="SageCodeXViewDocumentAction" class="com.sage.codex.sagecodex.action.SageCodeXViewDocumentAction"
+                text="View SageCodeX Documentation..." icon="com.sage.codex.sagecodex.constant.SageCodeXIcons.Document">
+        </action>
+        <action id="SageCodeXSettingAction" class="com.sage.codex.sagecodex.action.SageCodeXSettingAction"
+                text="Edit Settings..." icon="com.sage.codex.sagecodex.constant.SageCodeXIcons.Setting">
+        </action>
+        <action id="SageCodeXCompletionSwitchAction"
+                class="com.sage.codex.sagecodex.action.SageCodeXCompletionSwitchAction"
+                text="Disable Completions" icon="com.sage.codex.sagecodex.constant.SageCodeXIcons.Disabled">
+        </action>
+        <action id="SageCodeXOpenChatAction" class="com.sage.codex.sagecodex.action.SageCodeXOpenChatAction"
+                text="Open SageCodeX Chat" icon="com.sage.codex.sagecodex.constant.SageCodeXIcons.Chat">
+        </action>
+
+
+
+<!--        <action id="SageCodeXLoadUrl" class="com.example.MyPluginLoadHtmlAction" text="Load HTML" description="Load HTML"/>-->
+
+        <!-- 登录后的status的group -->
+        <group id="SageCodeXStatusReadyGroup">
+            <reference id="SageCodeXStatusAction"/>
+            <separator/>
+            <reference id="SageCodeXLogoutAction"/>
+            <reference id="SageCodeXViewDocumentAction"/>
+            <reference id="SageCodeXSettingAction"/>
+            <reference id="SageCodeXCompletionSwitchAction"/>
+            <separator/>
+            <reference id="SageCodeXOpenChatAction"/>
+        </group>
+
+        <!--未登录的status的group -->
+        <group id="SageCodeXStatusNotSignedGroup">
+            <reference id="SageCodeXStatusAction"/>
+            <separator/>
+            <reference id="SageCodeXLoginAction"/>
+            <reference id="SageCodeXViewDocumentAction"/>
+            <reference id="SageCodeXSettingAction"/>
+        </group>
+
+
+    </actions>
+
+
+
+
+
+</idea-plugin>

@@ -1,0 +1,1 @@
+rootProject.name = "sagegpt-codex-idea-plugin"
